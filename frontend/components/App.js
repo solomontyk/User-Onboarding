@@ -24,6 +24,8 @@ const e = { // This is a dictionary of validation error messages.
 // The schema should use the error messages contained in the object above.
   const getInitialValue = () =>({
     username:'',
+    email:'',
+    password:'',
     favLanguage:'',
     favFood:'',
     agreement:false,
@@ -31,6 +33,8 @@ const e = { // This is a dictionary of validation error messages.
 
   const getInitialErrors = () =>({
     username:'',
+    email:'',
+    password:'',
     favLanguage:'',
     favFood:'',
     agreement:'',
@@ -58,9 +62,13 @@ export default function App() {
     // At every change, you should validate the updated value and send the validation
     // error to the state where we track frontend validation errors.
     let {type,name,value,checked} = evt.target
-    value = type == 'checkbox' ? checked : value
-    setValues({...values,[name]:value})
-  }
+      value = type == 'checkbox' ? checked : value
+      // value = type == 'radio' ? checked : value
+      setValues({...values,[name]:value})
+      if(name == 'username' && value.length >= 3){  
+        setFormEnabled(true)
+        }
+  } 
 
   const onSubmit = evt => {
     // ✨ TASK: IMPLEMENT YOUR SUBMIT HANDLER
@@ -86,12 +94,14 @@ export default function App() {
     <div> {/* TASK: COMPLETE THE JSX */}
       <h2>Create an Account</h2>
       <form onSubmit={onSubmit}>
-        {serverSuccess && <h4 className="success">{serverSuccess}</h4>}
-        {serverFailure && <h4 className="error">{serverFailure}</h4>}
+        {serverSuccess && <h4 name='success' className="success">{serverSuccess}</h4>}
+        {serverFailure && <h4 name='error' className="error">{serverFailure}</h4>}
 
         <div className="inputGroup">
           <label htmlFor="username">Username:</label>
           <input value={values.username} onChange={onChange} id="username" name="username" type="text" placeholder="Type Username" />
+          <input value={values.email} onChange={onChange} id="email" name="email" type="text" placeholder="Type email" />
+          <input value={values.password} onChange={onChange} id="password" name="password" type="password" placeholder="Type password" />
           {errors.username &&<div className="validation">{errors.username}</div>}
         </div>
 
@@ -99,11 +109,11 @@ export default function App() {
           <fieldset>
             <legend>Favorite Language:</legend>
             <label>
-              <input checked={values.favLanguage == 'javascript'} onChange={onChange} type="radio" name="favLanguage" value="javascript" />
+              <input id='javascript' checked={values.favLanguage == 'javascript'} onChange={onChange} type="radio" name="favLanguage" value="javascript" />
               JavaScript
             </label>
             <label>
-              <input checked={values.favLanguage == 'rust'} onChange={onChange} type="radio" name="favLanguage" value="rust" />
+              <input id='rust' checked={values.favLanguage == 'rust'} onChange={onChange} type="radio" name="favLanguage" value="rust" />
               Rust
             </label>
           </fieldset>
@@ -130,9 +140,9 @@ export default function App() {
         </div>
 
         <div>
-          <input disabled={!formEnabled} type="submit" />
+          <input name='submit' disabled={!formEnabled} type="submit" />
         </div>
       </form>
     </div>
   )
-}
+ }
